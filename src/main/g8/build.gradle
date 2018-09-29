@@ -1,73 +1,56 @@
-plugins {
-    id 'play'
-    id 'idea'
-}
-
-def playVersion = '$play_version$'
-def scalaVersion = "2.12"
-
-model {
-    components {
-        play {
-            platform play: playVersion, scala: scalaVersion, java: '1.8'
-            injectedRoutesGenerator = true
-
-            sources {
-                twirlTemplates {
-                    defaultImports = TwirlImports.SCALA
-                }
+allprojects {
+    buildscript {
+        repositories {
+            maven {
+                url skyReleasesMirror
             }
+            maven {
+                url skyReleasesRepo
+            }
+            maven {
+                url gradlePluginsMirror
+            }
+            maven {
+                url gradlePluginsRepo
+            }
+            maven {
+                url centralMirror
+            }
+            mavenCentral()
+        }
+
+        dependencies {
+            classpath "com.sky.cirrus.core.gradle:k8-plugin:22.+"
         }
     }
-}
 
-// EXAMPLE: How to add parameter to Scala compiler
-// Another option is documented here:
-// https://docs.gradle.org/current/userguide/play_plugin.html#sec:configuring_compiler_options
-//
-// See other configurations for ScalaCompile task here:
-// https://docs.gradle.org/current/dsl/org.gradle.api.tasks.scala.ScalaCompile.html
-//
-// tasks.withType(ScalaCompile) {
-//     scalaCompileOptions.additionalParameters = [
-//         "-deprecation",
-//         "-verbose"
-//     ]
-// }
-
-// EXAMPLE: How to add JVM parameters when running `runPlayBinary`.
-// See other configurations for PlayRun here:
-// https://docs.gradle.org/current/dsl/org.gradle.play.tasks.PlayRun.html
-//
-// tasks.withType(PlayRun) {
-//     forkOptions.jvmArgs = ['-Dplay.http.secret.key=yadayada']
-// }
-
-// EXAMPLE: How to add JVM parameters to the script created by `stage`.
-// See more details here:
-// https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/application/CreateStartScripts.html
-//
-// tasks.withType(CreateStartScripts) {
-//     defaultJvmOpts = ['-Dplay.http.secret.key=yadayada']
-// }
-
-dependencies {
-    play "com.typesafe.play:play-guice_\$scalaVersion:\$playVersion"
-    play "com.typesafe.play:play-logback_\$scalaVersion:\$playVersion"
-    play "com.typesafe.play:filters-helpers_\$scalaVersion:\$playVersion"
-
-    playTest "org.scalatestplus.play:scalatestplus-play_\$scalaVersion:$scalatestplusplay_version$"
-}
-
-repositories {
-    jcenter()
-    maven {
-        name "lightbend-maven-releases"
-        url "https://repo.lightbend.com/lightbend/maven-release"
-    }
-    ivy {
-        name "lightbend-ivy-release"
-        url "https://repo.lightbend.com/lightbend/ivy-releases"
-        layout "ivy"
+    repositories {
+        maven {
+            url skyReleasesMirror
+        }
+        maven { 
+            url skyReleasesRepo
+        }
+        maven {
+            url centralMirror
+        }
+        mavenCentral()
     }
 }
+
+task sharedIntegrationTests(type: GradleBuild) {
+    buildFile = "umc-integration-tests/build.gradle"
+    dir = "umc-integration-tests"
+    tasks = ['clean', 'appSpecificIntegrationTest']
+    startParameter.systemPropertiesArgs = [app: 'partner-purchases-gateway']
+}
+
+task copyReports(type: Copy) {
+    from("umc-integration-tests/build") {
+        include "cucumber-report.json"
+        rename "cucumber-report.json", "umc-integration-report.json"
+    }
+    into "target/cucumber-reports"
+}
+
+sharedIntegrationTests.finalizedBy copyReports

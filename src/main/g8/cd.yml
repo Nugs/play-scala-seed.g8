@@ -1,0 +1,37 @@
+version: 1
+context: $team$
+triggering: master-and-prs
+
+defaultNodes:
+  default: $team$-small-slave
+  cdBuild: $team$-large-slave
+  cdFunctionalTest: $team$-large-slave
+  cdIntegratedTest: $team$-large-slave
+  cdStubbedNft: $team$-large-slave
+  cdExtendedNft: $team$-large-slave
+
+modules:
+  $name__normalize$-stubs:
+    pipelineShape: simple
+    slackNotifications:
+      main:
+        onEvents: ['failure', 'back-to-normal']
+
+  $name__normalize$-service:
+    pipelineShape: prod
+    slackNotifications:
+      main:
+        onEvents: ['failure', 'back-to-normal']
+      extended-test:
+        onEvents: ['failure', 'back-to-normal']
+      prod:
+        onEvents: ['success', 'failure']
+
+buildMonitors:
+  - name: $accronym$
+    regex: $name__normalize$.[^_].*
+
+slack:
+  domain: sky
+  token:  Re9M6yJwA0YIAb35O6win5qN
+  defaultChannel: $team$-private
