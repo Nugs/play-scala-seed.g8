@@ -11,28 +11,28 @@ lazy val commonSettings = Seq(
   version := git.gitDescribedVersion.value.getOrElse("0.1.0-SNAPSHOT").replace(s"${name.value}-", "")
 )
 
-lazy val `$name__normalize$` = (project in file("."))
+lazy val `$name;format="normalize"$` = (project in file("."))
   .settings(commonSettings)
   .aggregate(
-    `$name__normalize$-service`,
-    `$name__normalize$-test`,
-    `$name__normalize$-nft`,
-    `$name__normalize$-stubs`
+    `$name;format="normalize"$-service`,
+    `$name;format="normalize"$-test`,
+    `$name;format="normalize"$-nft`,
+    `$name;format="normalize"$-stubs`
   )
 
-lazy val `$name__normalize$-service` = (project in file("./$name__normalize$-service"))
+lazy val `$name;format="normalize"$-service` = (project in file("./$name;format="normalize"$-service"))
   .enablePlugins(PlayScala, DockerPlugin, BuildInfoPlugin)
   .settings(commonSettings)
 
-lazy val `$name__normalize$-test` = (project in file("./$name__normalize$-test"))
+lazy val `$name;format="normalize"$-test` = (project in file("./$name;format="normalize"$-test"))
   .settings(commonSettings)
-  .dependsOn(`$name__normalize$-service`, `$name__normalize$-stubs`)
+  .dependsOn(`$name;format="normalize"$-service`, `$name;format="normalize"$-stubs`)
 
-lazy val `$name__normalize$-nft` = (project in file("./$name__normalize$-nft"))
+lazy val `$name;format="normalize"$-nft` = (project in file("./$name;format="normalize"$-nft"))
   .enablePlugins(GatlingPlugin)
   .settings(commonSettings)
-  .dependsOn(`$name__normalize$-service`, `$name__normalize$-stubs`, `$name__normalize$-test` % "test->test")
+  .dependsOn(`$name;format="normalize"$-service`, `$name;format="normalize"$-stubs`, `$name;format="normalize"$-test` % "test->test")
 
-lazy val `$name__normalize$-stubs` = (project in file("./$name__normalize$-stubs"))
+lazy val `$name;format="normalize"$-stubs` = (project in file("./$name;format="normalize"$-stubs"))
   .enablePlugins(AshScriptPlugin, DockerPlugin)
   .settings(commonSettings)

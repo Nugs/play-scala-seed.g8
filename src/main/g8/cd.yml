@@ -11,13 +11,13 @@ defaultNodes:
   cdExtendedNft: $team$-large-slave
 
 modules:
-  $name__normalize$-stubs:
+  $name;format="normalize"$-stubs:
     pipelineShape: simple
     slackNotifications:
       main:
         onEvents: ['failure', 'back-to-normal']
 
-  $name__normalize$-service:
+  $name;format="normalize"$-service:
     pipelineShape: prod
     slackNotifications:
       main:
@@ -29,7 +29,7 @@ modules:
 
 buildMonitors:
   - name: $accronym$
-    regex: $name__normalize$.[^_].*
+    regex: $name;format="normalize"$.[^_].*
 
 slack:
   domain: sky

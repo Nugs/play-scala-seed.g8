@@ -1,2 +1,2 @@
-include '$name__normalize$-service'
-include '$name__normalize$-stubs'
+include '$name;format="normalize"$-service'
+include '$name;format="normalize"$-stubs'

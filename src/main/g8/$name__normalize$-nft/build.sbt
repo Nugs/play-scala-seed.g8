@@ -11,4 +11,4 @@ libraryDependencies ++= Seq(
   specs2 % Test excludeAll ExclusionRule("org.eclipse.jetty")
 )
 
-unmanagedResourceDirectories in Compile += baseDirectory.value / s"../$name__normalize$-service/conf"
+unmanagedResourceDirectories in Compile += baseDirectory.value / s"../$name;format="normalize"$-service/conf"
