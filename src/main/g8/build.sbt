@@ -8,7 +8,7 @@ lazy val commonSettings = Seq(
   organization := "com.sky.ott",
   scalaVersion := "2.11.12",
   resolvers ++= repositories,
-  version := git.gitDescribedVersion.value.getOrElse("0.1.0-SNAPSHOT").replace(s"${name.value}-", "")
+  version := git.gitDescribedVersion.value.getOrElse("0.1.0-SNAPSHOT").replace(s"\${name.value}-", "")
 )
 
 lazy val `$name;format="normalize"$` = (project in file("."))
